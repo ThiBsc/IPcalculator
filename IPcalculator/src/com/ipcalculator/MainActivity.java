@@ -15,12 +15,18 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity implements OnClickListener {
 	
+	private IP ip;
 	private LinearLayout lLayout;
 	private LayoutParams lParams;
 	private EditText txtIP;
 	private NumberPicker npMask;
 	private Button	btnCalculate;
 	private TextView txtResult;
+	
+	public MainActivity() {
+		super();
+		ip = new IP("127.0.0.1");
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +40,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		
 		txtIP = new EditText(this);
 		txtIP.setHint("Ex: 127.0.0.1");
+		txtIP.setMaxLines(1);
 		npMask = new NumberPicker(this);
 		//npMask.setOrientation(NumberPicker.HORIZONTAL);
 		npMask.setMinValue(1);
@@ -54,9 +61,9 @@ public class MainActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		Button btn = (Button) v;
 		txtResult.setText(txtIP.getText()+"/"+npMask.getValue()
-		+ "\nMask:"
-		+ "\nNetwork:"
-		+ "\nHost:"
-		+ "\nGateway:");
+		+ "\nMask: "+ip.decMaskToIpForm(npMask.getValue())
+		+ "\nNetwork: "
+		+ "\nHost: "
+		+ "\nBroadcast: ");
 	}
 }
