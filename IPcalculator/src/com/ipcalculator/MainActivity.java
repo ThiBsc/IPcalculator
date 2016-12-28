@@ -2,6 +2,7 @@ package com.ipcalculator;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +26,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	
 	public MainActivity() {
 		super();
-		ip = new IP("127.0.0.1");
+		ip = new IP("192.168.1.19");
 	}
 
 	@Override
@@ -39,8 +40,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		setContentView(lLayout, lParams);
 		
 		txtIP = new EditText(this);
-		txtIP.setHint("Ex: 127.0.0.1");
-		txtIP.setMaxLines(1);
+		txtIP.setHint("Ex: 192.168.1.19");
+		txtIP.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_CLASS_TEXT);
 		npMask = new NumberPicker(this);
 		//npMask.setOrientation(NumberPicker.HORIZONTAL);
 		npMask.setMinValue(1);
@@ -60,10 +61,13 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		Button btn = (Button) v;
-		txtResult.setText(txtIP.getText()+"/"+npMask.getValue()
-		+ "\nMask: "+ip.decMaskToIpForm(npMask.getValue())
-		+ "\nNetwork: "
-		+ "\nHost: "
-		+ "\nBroadcast: ");
+		ip.setIP(txtIP.getText().toString().isEmpty() ? "192.168.1.19" : txtIP.getText().toString());
+		int mask = npMask.getValue();
+		txtResult.setText(ip.getIP()+"/"+npMask.getValue()
+		+ "\nMask:\t\t\t\t"		+ip.maskToSubnet(mask)
+		+ "\nNetwork:\t\t"	+ip.getNetwork(mask)
+		+ "\nHost:\t\t\t\t"		+ip.getHost(mask)
+		+ "\nBroadcast:\t"	+ip.getBroadcast(mask)
+		+ "\nnbHost:\t\t\t"	+ip.getNbHost(mask));
 	}
 }
