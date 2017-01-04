@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnClickListener {
 	
@@ -23,6 +24,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private NumberPicker npMask;
 	private Button	btnCalculate;
 	private TextView txtResult;
+	private Toast toastErr;
 	
 	public MainActivity() {
 		super();
@@ -61,13 +63,18 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		Button btn = (Button) v;
-		ip.setIP(txtIP.getText().toString().isEmpty() ? "192.168.1.19" : txtIP.getText().toString());
-		int mask = npMask.getValue();
-		txtResult.setText(ip.getIP()+"/"+npMask.getValue()
-		+ "\nMask:\t\t\t\t"		+ip.maskToSubnet(mask)
-		+ "\nNetwork:\t\t"	+ip.getNetwork(mask)
-		+ "\nHost:\t\t\t\t"		+ip.getHost(mask)
-		+ "\nBroadcast:\t"	+ip.getBroadcast(mask)
-		+ "\nnbHost:\t\t\t"	+ip.getNbHost(mask));
+		if ( ip.setIP(txtIP.getText().toString().isEmpty() ? "192.168.1.19" : txtIP.getText().toString()) ){
+			int mask = npMask.getValue();
+			txtResult.setText(ip.getIP()+"/"+npMask.getValue()
+			+ "\nMask:\t\t\t\t"	+ip.maskToSubnet(mask)
+			+ "\nNetwork:\t\t"	+ip.getNetwork(mask)
+			+ "\nHost:\t\t\t\t"	+ip.getHost(mask)
+			+ "\nBroadcast:\t"	+ip.getBroadcast(mask)
+			+ "\nnbHost:\t\t\t"	+ip.getNbHost(mask));
+		}
+		else{
+			toastErr = Toast.makeText(this, "Invalid IP!", 1);
+			toastErr.show();
+		}
 	}
 }

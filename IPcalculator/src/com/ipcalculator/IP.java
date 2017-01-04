@@ -23,12 +23,16 @@ public class IP {
 		return inetAddr.getHostAddress();
 	}
 	
-	public void setIP(String ip){
+	public boolean setIP(String ip){
+		boolean ret;
 		try {
 			inetAddr = InetAddress.getByName(ip);
-		} catch (UnknownHostException e) {
+			ret = true;
+		} catch (Exception e) {
 			e.printStackTrace();
+			ret = false;
 		}
+		return ret;
 	}
 	
 	private long ipToLong(){
@@ -57,31 +61,27 @@ public class IP {
 		networkPart &= maskToLong(mask);
 		long bits = networkPart | ~maskToLong(mask);
 		
-		String broadcast = String.format("%d.%d.%d.%d", (bits & 0x0000000000ff000000L) >> 24,
-				(bits & 0x0000000000ff0000) >> 16,
-				(bits & 0x0000000000ff00) >> 8,
-				bits & 0xff);
-		return broadcast;
+		return bitToString(bits);
 	}
 	
 	public String getHost(int mask){
 		long bits = ipToLong();
 		bits &= ~maskToLong(mask);
-		String host = String.format("%d.%d.%d.%d", (bits & 0x0000000000ff000000L) >> 24,
-				(bits & 0x0000000000ff0000) >> 16,
-				(bits & 0x0000000000ff00) >> 8,
-				bits & 0xff);
-		return host;
+		return bitToString(bits);
 	}
 	
 	public String getNetwork(int mask){
 		long bits = ipToLong();
 		bits &= maskToLong(mask);
-		String network = String.format("%d.%d.%d.%d", (bits & 0x0000000000ff000000L) >> 24,
+		return bitToString(bits);
+	}
+	
+	public String bitToString(long bits){
+		String str = String.format("%d.%d.%d.%d", (bits & 0x0000000000ff000000L) >> 24,
 				(bits & 0x0000000000ff0000) >> 16,
 				(bits & 0x0000000000ff00) >> 8,
 				bits & 0xff);
-		return network;
+		return str;
 	}
 
 }
