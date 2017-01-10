@@ -1,8 +1,11 @@
 package com.ipcalculator;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.InputType;
+import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +20,7 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnClickListener {
 	
+	public static final String version = "v0.17.110";
 	private IP ip;
 	private LinearLayout lLayout;
 	private LayoutParams lParams;
@@ -58,6 +62,38 @@ public class MainActivity extends Activity implements OnClickListener {
 		lLayout.addView(npMask);
 		lLayout.addView(btnCalculate);
 		lLayout.addView(txtResult);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		menu.add(0, 0, 0, "About");
+		menu.add(0, 1, 1, "Dev. info");
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		boolean ret = true;
+		TextView msg = new TextView(this);
+		msg.setMovementMethod(LinkMovementMethod.getInstance());
+		msg.setClickable(true);
+		AlertDialog aDlg = new AlertDialog.Builder(this).setPositiveButton("Ok", null).create();
+		aDlg.setTitle(item.getTitle());
+		aDlg.setView(msg);
+		switch (item.getItemId()) {
+		case 0:
+			msg.setText("IPcalculator "+version+"\nMy first app by thibDev!");
+			aDlg.show();
+			break;
+		case 1:
+			msg.setText(Html.fromHtml("thibDev<br>Here my <a href=\"https://github.com/thibDev/\">GitHub!</a>"));
+			aDlg.show();
+			break;
+		default:
+			ret = super.onOptionsItemSelected(item);
+			break;
+		}
+		return ret;
 	}
 
 	@Override
